@@ -73,3 +73,29 @@ def map_to_world(pose, map_info):
     config[2] += angle
 
     return config
+
+''' 
+Convert array of poses in the world to pixel locations in the map image 
+  pose: The poses in the world to be converted. Should be a nx3 numpy array
+  map_info: Info about the map (returned by get_map)
+'''    
+def world_to_map_pixel(poses, map_info):
+   
+    scale = map_info.resolution
+    angle = -quaternion_to_angle(map_info.origin.orientation)
+
+    # Translation
+    poses[:,0] -= map_info.origin.position.x
+    poses[:,1] -= map_info.origin.position.y
+
+    # Scale
+    poses[:,:2] *= (1.0/float(scale))
+
+    # Rotation
+    c, s = np.cos(angle), np.sin(angle)
+    
+    # Store the x coordinates since they will be overwritten
+    temp = np.copy(poses[:,0])
+    poses[:,0] = c*poses[:,0] - s*poses[:,1]
+    poses[:,1] = s*temp       + c*poses[:,1]
+    poses[:,2] += angle

@@ -1,5 +1,5 @@
 <launch>
-
+        <arg name="final_race" default="True" />
 	<node pkg="final" type="PlannerNode.py" name="PlannerNode" output="screen">
         <param name="static_map" type="string" value="static_map" />
         <param name="halton_points" type="int" value="1250" />
@@ -9,6 +9,7 @@
         <param name="target_topic" type="string" value="/move_base_simple/goal" />
         <param name="pub_topic" type="string" value="planner_node/car_plan" />
         <param name="service_topic" type="string" value="planner_node/get_car_plan" />
+        <param name="final_race" value="$(arg final_race)" />
 	</node>
 
 </launch>

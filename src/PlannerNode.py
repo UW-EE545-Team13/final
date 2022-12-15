@@ -27,7 +27,8 @@ class PlannerNode(object):
                      pub_topic,
                      service_topic,
                      car_width,
-                     car_length):
+                     car_length,
+                     final_race):
     
     print("[Planner Node] Getting map from service...")
     rospy.wait_for_service(map_service_name)
@@ -48,6 +49,7 @@ class PlannerNode(object):
     self.target_pose = None
     self.target_updated = False
     self.target_yaw = None
+    self.final_race = final_race
     self.target_lock = Lock()
     
     self.cur_plan = None
@@ -246,7 +248,7 @@ class PlannerNode(object):
       self.cur_plan = self.planner.plan()    
       
       if self.cur_plan is not None:
-        self.cur_plan = self.planner.post_process(self.cur_plan, 5)
+        self.cur_plan = self.planner.post_process(self.cur_plan, 5, self.final_race)
         self.cur_plan = self.add_orientation(self.cur_plan)
         print '[Planner Node] ...plan complete'
       else:
@@ -267,8 +269,9 @@ if __name__ == '__main__':
   target_topic = rospy.get_param("~target_topic", "/move_base_simple/goal")
   pub_topic = rospy.get_param("~pub_topic", None)
   service_topic = rospy.get_param("~service_topic", None)
-  car_width = rospy.get_param("/car_kinematics/car_width", 0.33)
-  car_length = rospy.get_param("/car_kinematics/car_length", 0.33)
+  car_width = rospy.get_param("/car_kinematics/car_width", 0.5)
+  car_length = rospy.get_param("/car_kinematics/car_length", 0.5)
+  final_race = rospy.get_param('~final_race', True)
 
   
   pn = PlannerNode(map_service_name, 
@@ -280,7 +283,8 @@ if __name__ == '__main__':
                    pub_topic,
                    service_topic,
                    car_width,
-                   car_length)
+                   car_length, 
+                   final_race)
                    
   while not rospy.is_shutdown():
     if pub_topic is not None:
