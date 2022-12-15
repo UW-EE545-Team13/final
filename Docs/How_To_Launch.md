@@ -49,7 +49,7 @@ $ catkin_make
     ```
 6.  Add topics on RVIZ
 
-    Click on the Add button at the bottom left corner and click `By topic`, add the following topics:
+    Open RVIZ and click on the Add button at the bottom left corner and click `By topic`, add the following topics:
     ```
 	/graph (MarkerArray)
     /planner_node/car_plan (PoseArray)
@@ -67,7 +67,7 @@ $ catkin_make
 
     After step 7 the car should already be at the starting position of the plan, now go to the terminal window where you launched the line_follower node. 
     
-    On that terminal window you should see ‘Press Enter to when plan available…’, verify the plan is ready then hit `Enter` on your keyboard. Now just watch the car do the magic :) it should start moving along the plan.
+    On that terminal window you should see ‘Press Enter to when plan available…’, verify the plan is ready then hit `Enter` on your keyboard. Now open rviz and just watch the car do the magic :) it should start moving along the plan.
 
 ### Real Robot (Mushr Car)
 
