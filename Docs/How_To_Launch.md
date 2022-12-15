@@ -71,12 +71,12 @@ $ catkin_make
 
 ### Real Robot (Mushr Car)
 
-1. Set up the Mushr Car by following car_setup.pdf
+1. Set up the Mushr Car by following [car_setup.pdf](https://github.com/UW-EE545-Team13/final/blob/main/Docs/car_setup.pdf)
 2. Tune the car by following this: https://mushr.io/tutorials/tuning/
 
     Note:This is really important, otherwise the particle filter will give wrong locations
 
-3. If the car has any problems please read this [guid]|(https://mushr.io/hardware/build_instructions/) or reach out to TA.
+3. If the car has any problems please read this [guid](https://mushr.io/hardware/build_instructions/) or reach out to TA.
 4. Make sure the car is all setup, now connect to the car’s wifi and ssh into the car.
     ```
 	$ ssh robot@10.42.0.1
