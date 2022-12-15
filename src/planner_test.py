@@ -18,6 +18,9 @@ TARGET2 = [1608, 729, 0.0]
 SOURCE3 = [2328, 462, 0.0]
 TARGET3 = [456, 732, 0.0]
 
+SOURCE4 = [24.456226348876953, 13.005167007446289]
+TARGET4 = [13.226452827453613, 6.676239013671875]
+
 if __name__ == '__main__':
 
     rospy.init_node('planner_test', anonymous=True)
@@ -31,7 +34,7 @@ if __name__ == '__main__':
     get_plan = rospy.ServiceProxy(PLANNER_SERVICE_TOPIC, GetPlan)
 
     try:
-        resp = get_plan(Utils.map_to_world(SOURCE1, map_info), Utils.map_to_world(TARGET1, map_info))
+        resp = get_plan(SOURCE4, TARGET4)
         print np.array(resp.plan).reshape(-1, 3)
         print resp.success
     except rospy.ServiceException, e:

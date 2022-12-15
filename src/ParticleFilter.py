@@ -201,7 +201,7 @@ class ParticleFilter():
        Sample so that particles with higher weights are more likely to be sampled.
   '''
   def visualize(self):
-    print 'Visualizing...'
+    # print 'Visualizing...'
     self.state_lock.acquire()
     self.inferred_pose = self.expected_pose()
 

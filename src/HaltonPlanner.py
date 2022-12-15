@@ -5,6 +5,8 @@ import cv2
 import Utils
 import time
 import random
+import waypoints
+import FinalPlan
 
 
 import rospy
@@ -86,8 +88,59 @@ class HaltonPlanner(object):
   # Assumes that the source and target were inserted just prior to calling this
   # Returns the generated plan
 
+  def show_waypoints(self):
+    marker_array = MarkerArray()
+    visted=set()
+    id = 0
+    # x = waypoints.good_waypoints
+    # x = numpy.array(x, dtype=numpy.float64)
+    
+    for i in numpy.array(waypoints.good_waypoints, dtype=numpy.float64):
+      config = Utils.map_to_world(i, self.planningEnv.manager.map_info)
+      marker = Marker()
+      marker.id = id
+      marker.header.frame_id = "/map"
+      marker.type = marker.SPHERE
+      marker.action = marker.ADD
+      marker.scale.x = 0.2
+      marker.scale.y = 0.2
+      marker.scale.z = 0.2
+      marker.color.a = 1.0
+      marker.color.r = 0.0
+      marker.color.g = 0.0
+      marker.color.b = 1.0
+      marker.pose.orientation.w = 1.0
+      marker.pose.position.x = config[0]
+      marker.pose.position.y = config[1]
+      marker.pose.position.z = 0
+      marker_array.markers.append(marker)
+      id += 1
+    for i in numpy.array(waypoints.bad_waypoints, dtype=numpy.float64):
+      config = Utils.map_to_world(i, self.planningEnv.manager.map_info)
+      marker = Marker()
+      marker.id = id
+      marker.header.frame_id = "/map"
+      marker.type = marker.SPHERE
+      marker.action = marker.ADD
+      marker.scale.x = 0.2
+      marker.scale.y = 0.2
+      marker.scale.z = 0.2
+      marker.color.a = 1.0
+      marker.color.r = 1.0
+      marker.color.g = 0.0
+      marker.color.b = 0.0
+      marker.pose.orientation.w = 1.0
+      marker.pose.position.x = config[0]
+      marker.pose.position.y = config[1]
+      marker.pose.position.z = 0
+      marker_array.markers.append(marker)
+      id += 1
+    print('publish marker array..............')
+    self.graph_pub.publish(marker_array)
+
   # lazy A star
   def plan(self):
+    self.show_waypoints()
     # self.show_graph() #uncomment this to visualize the graph
     start_time = time.time()
     self.sid = self.planningEnv.graph.number_of_nodes() - 2 # Get source id
@@ -180,7 +233,7 @@ class HaltonPlanner(object):
 
 
   # Try to improve the current plan by repeatedly checking if there is a shorter path between random pairs of points in the path
-  def post_process(self, plan, timeout):
+  def post_process(self, plan, timeout, final_race):
 
     t1 = time.time()
     origin_cost = self.cost
@@ -228,7 +281,11 @@ class HaltonPlanner(object):
       self.cost += cost
     print('cost after post process is: {}'.format(self.cost))
     print('original cost was: {}'.format(origin_cost))
-    return plan
+    if final_race:
+      return FinalPlan.final_plan
+    else:
+      return plan
+
 
   # Backtrack across parents in order to recover path
   # vid: The id of the last node in the graph
